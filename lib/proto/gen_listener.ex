@@ -19,15 +19,16 @@ defmodule Proto.GenListener do
     {:ok, lsock} = :gen_tcp.listen(state[:port], state[:options])
 
     state = Map.put(state, :lsock, lsock)
+
     {:noreply, state, {:continue, :accept}}
   end
 
   def handle_continue(:accept, state) do
-    {:ok, sock} = :gen_tcp.accept(state[:lsock])
+    {:ok, socket} = :gen_tcp.accept(state[:lsock])
 
-    {:ok, _child} = Proto.GenSupervisor.start_child(state[:supervisor], state[:acceptor], sock)
+    {:ok, child} = Proto.GenSupervisor.start_child(state[:supervisor], state[:acceptor], socket)
 
-    # state = Map.update!(state, :socks, fn socks -> [child | socks] end)
+    :gen_tcp.controlling_process(socket, child)
 
     {:noreply, state, {:continue, :accept}}
   end

@@ -13,8 +13,6 @@ defmodule Proto.GenSupervisor do
   end
 
   def start_child(sup_name, acceptor, socket) do
-    {:ok, child} = DynamicSupervisor.start_child(sup_name, {acceptor, %{socket: socket}})
-
-    {:ok, child}
+    DynamicSupervisor.start_child(sup_name, {acceptor, %{socket: socket}})
   end
 end
