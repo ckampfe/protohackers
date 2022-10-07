@@ -27,8 +27,6 @@ defmodule Proto.Means.Acceptor do
         end
 
       {:ok, <<"Q", mintime::signed-big-integer-32, maxtime::big-integer-32>>} ->
-        id = UUID.uuid4()
-
         prices = Map.fetch!(state, :prices)
 
         prices_in_window =
@@ -39,14 +37,11 @@ defmodule Proto.Means.Acceptor do
           |> Enum.map(fn {_timestamp, price} -> price end)
 
         window_len = Enum.count(prices_in_window)
-        Logger.debug("#{id}: window_len #{window_len}")
 
         if window_len > 0 do
           sum = Enum.sum(prices_in_window)
-          Logger.debug("#{id}: sum #{sum}")
 
           mean = (sum / window_len) |> Kernel.ceil()
-          Logger.debug("#{id}: mean #{mean}")
 
           :ok = :gen_tcp.send(state[:socket], <<mean::signed-integer-big-32>>)
 

@@ -26,8 +26,7 @@ defmodule Proto.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:jason, "~> 1.0"},
       {:phoenix_pubsub, "~> 2.1"},
-      {:prime, "~> 0.1.1"},
-      {:uuid, "~> 1.1"}
+      {:prime, "~> 0.1.1"}
     ]
   end
 end
