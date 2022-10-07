@@ -1,0 +1,34 @@
+FROM hexpm/elixir:1.14.0-erlang-25.1-alpine-3.16.2 as builder
+
+ENV LANG=C.UTF-8
+
+ENV MIX_ENV=prod
+
+WORKDIR /usr/src/proto
+
+COPY . . 
+
+RUN mix local.hex --force
+
+RUN mix deps.get --only prod
+
+RUN mix release  --path release
+
+################################
+################################
+################################
+
+FROM alpine:3.16.2
+
+ENV LANG=C.UTF-8
+
+RUN apk add --update --no-cache \
+    libstdc++ \
+    ncurses \
+    libressl
+
+EXPOSE 8080 8081 8082 8083 8084/udp
+
+COPY --from=builder /usr/src/proto/release/ release
+
+CMD ["release/bin/proto", "start"]
