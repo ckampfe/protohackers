@@ -83,7 +83,8 @@ defmodule Proto.Application do
            ]
          }},
         id: :budget_chat_listener
-      )
+      ),
+      {Proto.Unusual.Acceptor, %{port: 8084}}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
