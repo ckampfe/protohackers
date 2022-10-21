@@ -23,6 +23,9 @@ defmodule Proto.Application do
       Supervisor.child_spec({Proto.GenSupervisor, %{sup_name: Proto.BudgetChat.Supervisor}},
         id: :budget_chat_sup
       ),
+      Supervisor.child_spec({Proto.GenSupervisor, %{sup_name: Proto.Mob.Supervisor}},
+        id: :mob_sup
+      ),
       ###### listeners
       Supervisor.child_spec(
         {Proto.GenListener,
@@ -84,7 +87,22 @@ defmodule Proto.Application do
          }},
         id: :budget_chat_listener
       ),
-      {Proto.Unusual.Acceptor, %{port: 8084}}
+      {Proto.Unusual.Acceptor, %{port: 8084}},
+      Supervisor.child_spec(
+        {Proto.GenListener,
+         %{
+           acceptor: Proto.Mob.Acceptor,
+           supervisor: Proto.Mob.Supervisor,
+           port: 8085,
+           options: [
+             :binary,
+             {:active, false},
+             {:packet, :line},
+             {:recbuf, :math.pow(2, 16) |> Kernel.floor()}
+           ]
+         }},
+        id: :mob_listener
+      )
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

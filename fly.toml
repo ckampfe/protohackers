@@ -47,6 +47,13 @@ processes = []
   [[services.ports]]
     port = "8084"
 
+[[services]]
+  internal_port = 8085
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = "8085"
+
 # [[services]]
 #   http_checks = []
 #   internal_port = 8080
